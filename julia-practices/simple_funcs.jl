@@ -20,4 +20,8 @@ println(x1)
 println(x2)
 
 # @printf allows automatically formatting
-@printf "first sol: %0.4f and second sol: %0.4f" x1 x2
+@printf "first sol: %0.4f and second sol: %0.4f\n" x1 x2
+
+f(x, y) = x + y, x - y
+
+println(f(3, 4))
