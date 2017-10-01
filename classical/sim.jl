@@ -39,6 +39,7 @@ E2_T=[]
 M4_T=[]
 E4_T=[]
 
+println("Start 2D Ising Monte Carlo Simulation")
 tic()
 for T in TList
     thermalization(spins, L, T, THERMO)
@@ -105,6 +106,7 @@ for T in TList
     println("$T: E: $E_mean, M: $M_mean, |M|: $absM_mean")#, Cv: $Cv, X: $X")
 end
 toc()
+println("Done.")
 
 # Save the result
 h5open(outfile, "w") do file
@@ -116,3 +118,4 @@ h5open(outfile, "w") do file
     write(file, "E2", Array{Float64}(E2_T))
     write(file, "E4", Array{Float64}(E4_T))
 end
+println("Save the data to $outfile")
