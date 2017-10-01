@@ -111,6 +111,7 @@ println("Done.")
 # Save the result
 h5open(outfile, "w") do file
     write(file, "T", Array{Float64}(TList))
+    write(file, "absM", Array{Float64}(absM_T))
     write(file, "M", Array{Float64}(M_T))
     write(file, "M2", Array{Float64}(M2_T))
     write(file, "M4", Array{Float64}(M4_T))
