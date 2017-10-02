@@ -16,7 +16,7 @@ FLAGS = parser.parse_args()
 
 # Read all data list from some folder
 datafiles = [f for f in listdir(FLAGS.data_dir) if isfile(join(FLAGS.data_dir, f))]
-datanames = [fn.rstrip(".h5") for fn in datafiles]
+datanames = []
 
 for df in datafiles:
     data = hf.File(join(FLAGS.data_dir, df), "r")
@@ -38,6 +38,7 @@ for df in datafiles:
         observ = 1.5 - 0.5 * R2
     else:
         observ = data[FLAGS.observ][:]
+    datanames.append(df.rstrip(".h5"))
     plt.plot(T, observ, '-*', linewidth=1.0)
 
 plt.xlabel("T")
