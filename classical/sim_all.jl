@@ -8,19 +8,21 @@ function thermalization(s::Array{Int8}, L::Int64, T::Float64, THERMO)
     end
 end
 
+# Though we dont like global
+const J = 1.0
+const TMAX = 3.5
+const TMIN = 1.5
+const NUM_SIM = 101
+const NUM_BINS = 10
+# Total simulation time = MCSteps x Bin size
+# N = BxM
+const THERMO = 20000
+const MCSTEPS = 10000
+const fMCS = Float64(MCSTEPS)
+
 ## Simulation Informations
-for L in [8,16,32,64]
+for L in [8,16,32,64,128]
     N = L^2
-    J = 1.0
-    TMAX = 3.5
-    TMIN = 1.0
-    NUM_SIM = 101
-    NUM_BINS = 10
-    # Total simulation time = MCSteps x Bin size
-    # N = BxM
-    THERMO = 20000
-    MCSTEPS = 10000
-    fMCS = Float64(MCSTEPS)
     # Output 
     outfile = "L$L.h5"
     println(outfile)
@@ -61,6 +63,7 @@ for L in [8,16,32,64]
             for step in 1:MCSTEPS
                 update(spins, L, T)
                 # measurement
+                # TODO: optimize this
                 E = cal_eng(spins, L)
                 M = cal_mag(spins)
                 # energy and magnetization
