@@ -3,8 +3,10 @@ using HDF5
 #using PyPlot
 
 function thermalization(s::Array{Int8}, L::Int64, T::Float64, THERMO)
+    E = cal_eng(s, L)
+    M = cal_mag(s)
     for i in 1:THERMO
-        update(s, L, T)
+        E, M = update(s, L, T, E, M)
     end
 end
 
@@ -60,12 +62,12 @@ for L in [8,16,32,64,128]
             Ebin = 0.0
             E2bin = 0.0
             E4bin = 0.0
+            E = cal_eng(spins, L)
+            M = cal_mag(spins)
             for step in 1:MCSTEPS
-                update(spins, L, T)
+                E, M = update(spins, L, T, E, M)
                 # measurement
                 # TODO: optimize this
-                E = cal_eng(spins, L)
-                M = cal_mag(spins)
                 # energy and magnetization
                 eng = E/N
                 mag = M/N
