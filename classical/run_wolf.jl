@@ -1,5 +1,5 @@
 include("ising_model.jl")
-include("wolfcluster2.jl")
+include("wolfcluster.jl")
 using HDF5
 
 function thermalization(s::Array{Int8}, L::Int64, T::Float64, THERMO)
