@@ -8,28 +8,27 @@ function neighbors(L::Int64, loc::CartesianIndex{2})
             CartesianIndex(i, (j+L-2)%L + 1), CartesianIndex(i, (j+L  )%L + 1)]
 end
 
-function grow_cluster!(loc::CartesianIndex{2}, spins::Array{Int8, 2}, cluster::BitArray{2}, L::Int64, T::Float64)
+function grow_cluster!(loc::CartesianIndex{2}, spins::Array{Int8, 2}, L::Int64, T::Float64)
     """Connect the bonds by recursively grow the cluster
     """
-    # Connect the bond, also we can directly flip the spin
-    cluster[loc] = true
+    # Flip the selected spin
+    spins[loc] *= -1
     # loop through neighboring site, get all neighboring sites
     for nbor in neighbors(L, loc)
-        if cluster[nbor] == false && spins[nbor] == spins[loc] && rand() > exp(-2/T)
-                grow_cluster!(nbor, spins, cluster, L, T)
+        if spins[nbor] == spins[loc] && rand() > exp(-2/T)
+                grow_cluster!(nbor, spins, L, T)
         end
     end
 end
 
-function ClusterUpdate!(spins::Array{Int8, 2}, L::Int64, T::Float64)
-    # Random start
-    start = CartesianIndex((rand(1:L), rand(1:L)))
-    # not connected bonds
-    cluster = falses(size(spins))
-    grow_cluster!(start, spins, cluster, L, T)
-    # Calculate Energy change
-    dE = -2*connected_spins(spins, cluster)
-    if dE < 0 || rand() < exp(-dE) flip_cluster!(spins, cluster) end
+function ClusterUpdate!(spins::Array{Int8, 2}, iters, L::Int64, T::Float64)
+    for i in 1:iters
+        # Random start
+        start = CartesianIndex((rand(1:L), rand(1:L)))
+        # not connected bonds
+        grow_cluster!(start, spins, L, T)
+        # Calculate Energy change
+    end
 end
 
 function flip_cluster!(spins::Array{Int8, 2}, cluster::BitArray{2})
@@ -39,7 +38,9 @@ function flip_cluster!(spins::Array{Int8, 2}, cluster::BitArray{2})
     end
 end
 
-function connected_spins(spins::Array{Int8, 2}, cluster::BitArray{2})
+function changed_spins(spins::Array{Int8, 2}, cluster::BitArray{2})
+    """
+    """
     sum = 0
     L = size(spins,1)
     for j in 1:L, i in 1:L
