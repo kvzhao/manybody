@@ -1,15 +1,21 @@
 randspin() = (Int8)[1,-1][rand(1:2)]
 
 function init_state(L::Int64)
-    s = [Int8(rand(0:1) == 0? -1: 1) for _ in 1:L^2]
+    """Create 2D grid of spins
+    """
+    s = [randspin() for _ in 1:L^2]
     return reshape(s, L, L)
+end
+
+function init_spins(L::Int64)
+    return [randspin() for i in 1:L, j in 1:L]
 end
 
 function cal_mag(s::Array{Int8})
     return Float64(sum(s))
 end
 
-function cal_eng(s::Array{Int8}, L::Int64)
+function cal_eng(s::Array{Int8, 2}, L::Int64)
     E = 0.0
     for i in 1:L
         for j in 1:L
