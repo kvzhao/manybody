@@ -12,10 +12,10 @@ function grow_cluster!(loc::CartesianIndex{2}, spins::Array{Int8, 2}, s0::Int8, 
     """Connect the bonds by recursively grow the cluster
     """
     # Flip the selected spin
-    spins[loc] = -s0
+    spins[loc] = -spins[loc]
     # loop through neighboring site, get all neighboring sites
     for nbor in neighbors(L, loc)
-        if spins[nbor] == s0 && rand() < exp(-2.0/T)
+        if spins[nbor] == s0 && rand() > exp(-2.0/T)
                 grow_cluster!(nbor, spins, s0, L, T)
         end
     end
