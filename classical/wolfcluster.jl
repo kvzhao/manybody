@@ -8,15 +8,15 @@ function neighbors(L::Int64, loc::CartesianIndex{2})
             CartesianIndex(i, (j+L-2)%L + 1), CartesianIndex(i, (j+L  )%L + 1)]
 end
 
-function grow_cluster!(loc::CartesianIndex{2}, spins::Array{Int8, 2}, L::Int64, T::Float64)
+function grow_cluster!(loc::CartesianIndex{2}, spins::Array{Int8, 2}, s0::Int8, L::Int64, T::Float64)
     """Connect the bonds by recursively grow the cluster
     """
     # Flip the selected spin
-    spins[loc] *= -1
+    spins[loc] = -s0
     # loop through neighboring site, get all neighboring sites
     for nbor in neighbors(L, loc)
-        if spins[nbor] == spins[loc] && rand() > exp(-2/T)
-                grow_cluster!(nbor, spins, L, T)
+        if spins[nbor] == s0 && rand() < exp(-2.0/T)
+                grow_cluster!(nbor, spins, s0, L, T)
         end
     end
 end
@@ -25,8 +25,9 @@ function ClusterUpdate!(spins::Array{Int8, 2}, iters, L::Int64, T::Float64)
     for i in 1:iters
         # Random start
         start = CartesianIndex((rand(1:L), rand(1:L)))
+        s0 = spins[start]
         # not connected bonds
-        grow_cluster!(start, spins, L, T)
+        grow_cluster!(start, spins, s0, L, T)
         # Calculate Energy change
     end
 end
