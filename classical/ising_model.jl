@@ -11,11 +11,11 @@ function init_spins(L::Int64)
     return [randspin() for i in 1:L, j in 1:L]
 end
 
-function cal_mag(s::Array{Int8})
+function cal_mag(s::Array{Int8,2})
     return Float64(sum(s))
 end
 
-function cal_eng(s::Array{Int8, 2}, L::Int64)
+function cal_eng(s::Array{Int8,2}, L::Int64)
     E = 0.0
     for i in 1:L
         for j in 1:L
