@@ -1,3 +1,5 @@
+randspin() = (Int8)[1,-1][rand(1:2)]
+
 function init_state(L::Int64)
     s = [Int8(rand(0:1) == 0? -1: 1) for _ in 1:L^2]
     return reshape(s, L, L)
@@ -18,7 +20,8 @@ function cal_eng(s::Array{Int8}, L::Int64)
     return E/4.0
 end
 
-function update(s::Array{Int8}, L::Int64, T::Float64, E::Float64, M::Float64)
+#By convention, an exclamation mark (!) at the end of a function's name indicates that the function may modify its arguments.
+function update!(s::Array{Int8}, L::Int64, T::Float64, E::Float64, M::Float64)
     """ Update, take current E & M
         then return E and M
     """
