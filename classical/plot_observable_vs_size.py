@@ -14,22 +14,27 @@ parser.add_argument("--data_dir", dest="data_dir", default="from_boromir", type=
 parser.add_argument("--out_name", dest="out_name", default="out", type=str, help="Save figure name")
 FLAGS = parser.parse_args()
 
+def autocorr(x):
+    result = np.correlate(x, x, mode='full')
+    return result[int(result.size/2):]
+
 # Read all data list from some folder
 datafiles = [f for f in listdir(FLAGS.data_dir) if isfile(join(FLAGS.data_dir, f))]
 datanames = []
 
 for df in datafiles:
     data = hf.File(join(FLAGS.data_dir, df), "r")
+    L = int(df.rstrip(".h5").strip("L"))
+    N = L ** 2
     T = data["T"][:]
     if FLAGS.observ == 'Cv':
         E = data["E"][:] 
         E2 = data["E2"][:] 
-        observ = (E2 - E**2) / T ** 2
+        observ = (E2 - E**2) / T ** 2 * N
     elif FLAGS.observ == "X":
-        #M = data["M"][:]
         M = data["absM"][:]
         M2 = data["M2"][:]
-        observ  = (M2 - M**2) / T 
+        observ  = (M2 - M**2) / T * N
     elif FLAGS.observ == "U2":
         M2 = data["M2"][:]
         M4 = data["M4"][:]
