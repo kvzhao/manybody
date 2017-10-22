@@ -2,7 +2,7 @@ include("ising_model.jl")
 include("wolfcluster.jl")
 using HDF5
 
-function thermalization(s::Array{Int8}, L::Int64, T::Float64, THERMO)
+function thermalization(s::Array{Int8, 2}, L::Int64, T::Float64, THERMO)
     E = cal_eng(s, L)
     M = cal_mag(s)
     for i in 1:THERMO
@@ -14,10 +14,11 @@ end
 const J = 1.0
 const TMAX = 3.5
 const TMIN = 1.5
-const NUM_SIM = 101
+const NUM_SIM = 101 # interval of Temp list
+const NUM_SIM = 5 
 const NUM_BINS = 10
 # Total simulation time = MCSteps x Bin size
-# N = BxM
+# N = MxB
 const THERMO = 20000
 const MCSTEPS = 10000
 const fMCS = Float64(MCSTEPS)
@@ -71,7 +72,7 @@ for L in [8,16,32,64,128]
             E = cal_eng(spins, L)
             M = cal_mag(spins)
             for step in 1:MCSTEPS
-                ClusterUpdate!(spins, N, L, T)
+                ClusterUpdate!(spins, 1, L, T)
                 E = cal_eng(spins,L)
                 M = cal_mag(spins)
                 # measurement

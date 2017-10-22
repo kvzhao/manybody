@@ -2,7 +2,7 @@ include("ising_model.jl")
 using HDF5
 #using PyPlot
 
-function thermalization(s::Array{Int8}, L::Int64, T::Float64, THERMO)
+function thermalization(s::Array{Int8, 2}, L::Int64, T::Float64, THERMO)
     E = cal_eng(s, L)
     M = cal_mag(s)
     for i in 1:THERMO
